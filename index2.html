@@ -1,0 +1,297 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  Calendar, User, Shield, Award, LogIn, LogOut, 
+  Download, CheckCircle, Clock, ChevronRight, 
+  LayoutDashboard, BookOpen, FileText, Printer,
+  Bell, Settings, UserCheck, Search
+} from 'lucide-react';
+
+// --- PDF 생성을 위한 jsPDF 라이브러리 로드 ---
+const loadJsPDF = () => {
+  return new Promise((resolve) => {
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+    script.onload = () => resolve(window.jspdf);
+    document.head.appendChild(script);
+  });
+};
+
+// --- 11개 교육 과정 마스터 데이터 (schedule.html 기반) ---
+const COURSE_MASTER = [
+  { id: 'AX-01', type: 'AX일반', name: '생성형 AI 기반 업무 생산성 혁신 실무', hours: 16, days: 2, s1: '2026-05-16', content: 'ChatGPT, Claude 등 LLM의 실무 활용 및 자동화 기법' },
+  { id: 'AX-02', type: 'AX일반', name: 'AI 윤리·보안·리스크 관리 입문', hours: 8, days: 1, s1: '2026-05-30', content: '기업용 AI 도입 시 보안 위협 및 윤리 가이드라인' },
+  { id: 'AX-03', type: 'AX일반', name: '생성형 AI 업무 활용 프롬프트 설계 실무', hours: 16, days: 2, s1: '2026-06-13', content: '고급 프롬프트 엔지니어링 및 페르소나 설계' },
+  { id: 'AX-04', type: 'AX일반', name: 'AI 기반 데이터 시각화 및 인사이트 도출 실무', hours: 16, days: 2, s1: '2026-07-04', content: 'Python 및 AI 도구를 활용한 데이터 분석 및 시각화' },
+  { id: 'AX-05', type: 'AX일반', name: 'AI 업무 자동화 바이브 코딩 실무', hours: 16, days: 2, s1: '2026-07-11', content: 'Cursor, v0 등을 활용한 노코드/로우코드 자동화 구현' },
+  { id: 'AX-06', type: 'AX일반', name: 'AI 활용 업무 개선 아이디어 설계 실무', hours: 12, days: 2, s1: '2026-08-01', content: '사내 AI 도입을 위한 비즈니스 모델링 및 기획' },
+  { id: 'AX-07', type: 'AX일반', name: 'AI 적용 성과평가 및 개선 방향 도출 실무', hours: 12, days: 2, s1: '2026-08-08', content: '도입된 AI 솔루션의 ROI 분석 및 성과 측정' },
+  { id: 'AX-08', type: 'AX전문', name: '생성형 AI 모델 파인튜닝 실무', hours: 30, days: 4, s1: '2026-06-20', content: '오픈소스 LLM(Llama 3 등) 미세 조정 및 배포' },
+  { id: 'AX-09', type: 'AX전문', name: 'AI 에이전트 기반 업무 지능화 개발', hours: 30, days: 4, s1: '2026-07-18', content: 'LangChain 기반 자율형 AI 에이전트 시스템 구축' },
+  { id: 'AX-10', type: 'AX전문', name: '제조물류 특화 딥러닝 이상 탐지 과정', hours: 30, days: 4, s1: '2026-08-22', content: 'CNN/RNN 기반 제조 공정 이상 탐지 알고리즘 실습' },
+  { id: 'AX-11', type: 'AX전문', name: 'MLOps 기반 AI 서비스 배포 및 운영 자동화', hours: 30, days: 4, s1: '2026-09-05', content: 'Docker/K8s 기반 AI 모델 생명주기 관리 및 자동화' }
+];
+
+export default function App() {
+  const [view, setView] = useState('login'); // 'login', 'student', 'admin'
+  const [user, setUser] = useState(null);
+  const [myEnrollments, setMyEnrollments] = useState([]); // { courseId, status: 'APPLIED' | 'COMPLETED' }
+  const [allEnrollments, setAllEnrollments] = useState([]); // For Admin View
+  const [jsPDF, setJsPDF] = useState(null);
+
+  useEffect(() => {
+    loadJsPDF().then(setJsPDF);
+  }, []);
+
+  // --- Actions ---
+  const handleLogin = (role) => {
+    if (role === 'student') {
+      setUser({ name: '홍길동', company: '부경AX협력사', role: 'student' });
+      setView('student_home');
+    } else {
+      setUser({ name: '김철수', role: 'admin' });
+      setView('admin_home');
+    }
+  };
+
+  const handleApply = (course) => {
+    if (myEnrollments.find(e => e.id === course.id)) {
+      alert("이미 신청한 과정입니다.");
+      return;
+    }
+    const newEntry = { ...course, status: 'APPLIED', appliedDate: new Date().toLocaleDateString() };
+    setMyEnrollments([...myEnrollments, newEntry]);
+    setAllEnrollments([...allEnrollments, { ...newEntry, userName: user.name, userCompany: user.company }]);
+    alert(`${course.name} 신청이 완료되었습니다.`);
+  };
+
+  const handleComplete = (id) => {
+    const updatedAll = allEnrollments.map(e => e.id === id ? { ...e, status: 'COMPLETED' } : e);
+    const updatedMy = myEnrollments.map(e => e.id === id ? { ...e, status: 'COMPLETED' } : e);
+    setAllEnrollments(updatedAll);
+    setMyEnrollments(updatedMy);
+  };
+
+  const downloadCertificate = (course) => {
+    if (!jsPDF) return;
+    const { jsPDF: Doc } = jsPDF;
+    const doc = new Doc('p', 'mm', 'a4');
+
+    // 수료증 디자인 시뮬레이션
+    doc.setDrawColor(0, 56, 118);
+    doc.setLineWidth(2);
+    doc.rect(10, 10, 190, 277); // 테두리
+    
+    doc.setFontSize(40);
+    doc.text('CERTIFICATE', 105, 60, { align: 'center' });
+    doc.setFontSize(20);
+    doc.text('OF COMPLETION', 105, 75, { align: 'center' });
+    
+    doc.setFontSize(16);
+    doc.text('This is to certify that', 105, 110, { align: 'center' });
+    doc.setFontSize(25);
+    doc.text(user.name, 105, 130, { align: 'center' });
+    
+    doc.setFontSize(14);
+    doc.text('has successfully completed the course:', 105, 155, { align: 'center' });
+    doc.setFontSize(18);
+    doc.text(course.name, 105, 175, { align: 'center' });
+    
+    doc.setFontSize(12);
+    doc.text(`Course ID: ${course.id}`, 105, 190, { align: 'center' });
+    doc.text(`Period: ${course.s1} (${course.hours} Hours)`, 105, 200, { align: 'center' });
+
+    doc.setFontSize(14);
+    doc.text(new Date().toLocaleDateString(), 105, 230, { align: 'center' });
+    
+    doc.setFontSize(18);
+    doc.text('Director of PKNU AX Academy', 105, 255, { align: 'center' });
+
+    doc.save(`Certificate_${course.id}_${user.name}.pdf`);
+  };
+
+  // --- UI Components ---
+  const Navbar = () => (
+    <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 px-8 py-4 flex justify-between items-center shadow-sm">
+      <div className="flex items-center gap-3">
+        <div className="bg-[#003876] p-2 rounded-xl text-white shadow-lg"><Award size={24} /></div>
+        <div>
+          <h1 className="text-lg font-black text-[#003876] leading-none tracking-tighter">PKNU AX Academy</h1>
+          <p className="text-[10px] text-slate-400 font-bold tracking-widest uppercase mt-1">Intelligent Training System</p>
+        </div>
+      </div>
+      <div className="flex items-center gap-4">
+        <span className="text-xs font-bold text-slate-600">{user?.name} {user?.role === 'admin' ? '관리자' : '훈련생'}</span>
+        <button onClick={() => setView('login')} className="p-2 text-slate-400 hover:text-red-500 transition-colors"><LogOut size={20} /></button>
+      </div>
+    </nav>
+  );
+
+  // --- Views ---
+  if (view === 'login') return (
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
+      <div className="bg-white p-12 rounded-[3rem] shadow-2xl border border-slate-200 w-full max-w-md text-center">
+        <Award size={64} className="mx-auto text-[#003876] mb-8" />
+        <h2 className="text-3xl font-black text-slate-900 tracking-tight mb-2">포털 로그인</h2>
+        <p className="text-slate-400 text-sm mb-10">PKNU AX Academy 통합 운영 시스템</p>
+        <div className="space-y-4">
+          <button onClick={() => handleLogin('student')} className="w-full py-5 bg-[#003876] text-white rounded-2xl font-black text-lg hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-blue-900/20">훈련생으로 시작</button>
+          <button onClick={() => handleLogin('admin')} className="w-full py-5 bg-slate-900 text-white rounded-2xl font-black text-lg hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-slate-900/20">관리자 모드 접속</button>
+        </div>
+        <p className="mt-8 text-[10px] text-slate-300 font-bold tracking-widest uppercase">Field Evaluation Demo Version</p>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-slate-50 text-slate-900">
+      <Navbar />
+      
+      <div className="max-w-7xl mx-auto p-8 lg:p-12">
+        {/* STUDENT VIEW */}
+        {(view === 'student_home' || view === 'student_my') && (
+          <div className="space-y-12 animate-in fade-in duration-500">
+            <div className="flex justify-between items-end">
+              <div>
+                <h2 className="text-4xl font-black tracking-tight">{view === 'student_home' ? '2026 연간 교육 일정' : '내 수강 강의실'}</h2>
+                <p className="text-slate-500 mt-2 font-medium">{view === 'student_home' ? '부경대학교 AX 특화 센터의 11개 전문 과정을 만나보세요.' : '신청 내역 및 수료증 발급 현황을 관리합니다.'}</p>
+              </div>
+              <div className="flex bg-white p-1.5 rounded-2xl shadow-sm border border-slate-200">
+                <button onClick={() => setView('student_home')} className={`px-6 py-2.5 rounded-xl text-sm font-black transition-all ${view === 'student_home' ? 'bg-[#003876] text-white shadow-md' : 'text-slate-400'}`}>일정 안내</button>
+                <button onClick={() => setView('student_my')} className={`px-6 py-2.5 rounded-xl text-sm font-black transition-all ${view === 'student_my' ? 'bg-[#003876] text-white shadow-md' : 'text-slate-400'}`}>나의 수강</button>
+              </div>
+            </div>
+
+            {view === 'student_home' ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {COURSE_MASTER.map(course => (
+                  <div key={course.id} className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all group">
+                    <div className="flex justify-between mb-6">
+                      <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${course.type === 'AX일반' ? 'bg-blue-50 text-blue-600' : 'bg-slate-900 text-white'}`}>{course.type}</span>
+                      <span className="text-[10px] font-bold text-slate-400">{course.hours}시간 / {course.days}일</span>
+                    </div>
+                    <h3 className="text-xl font-bold mb-3 group-hover:text-[#003876] transition-colors">{course.name}</h3>
+                    <p className="text-xs text-slate-400 mb-8 leading-relaxed font-medium">{course.content}</p>
+                    <div className="flex items-center justify-between mt-auto">
+                      <div className="flex items-center gap-2 text-xs font-bold text-slate-600"><Calendar size={14} className="text-blue-500"/> {course.s1} 개강</div>
+                      <button onClick={() => handleApply(course)} className="bg-slate-100 px-5 py-2.5 rounded-xl text-xs font-black hover:bg-[#003876] hover:text-white transition-all">신청하기</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {myEnrollments.length === 0 ? (
+                  <div className="py-32 text-center bg-white rounded-[3rem] border-2 border-dashed border-slate-200">
+                    <p className="text-slate-400 font-bold uppercase tracking-widest">신청한 과정이 없습니다.</p>
+                  </div>
+                ) : (
+                  myEnrollments.map(e => (
+                    <div key={e.id} className="bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-center gap-6">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-[10px] font-black text-blue-500 uppercase">{e.id}</span>
+                          <span className="text-[10px] font-bold text-slate-300">신청일: {e.appliedDate}</span>
+                        </div>
+                        <h4 className="text-2xl font-black text-slate-800 tracking-tight">{e.name}</h4>
+                      </div>
+                      <div className="flex items-center gap-8">
+                        <div className="text-center md:text-right">
+                          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">상태</p>
+                          <span className={`text-sm font-black ${e.status === 'COMPLETED' ? 'text-emerald-600' : 'text-blue-600'}`}>
+                            {e.status === 'COMPLETED' ? '수료 완료' : '수강 중'}
+                          </span>
+                        </div>
+                        {e.status === 'COMPLETED' && (
+                          <button onClick={() => downloadCertificate(e)} className="bg-[#003876] text-white px-8 py-4 rounded-2xl font-black text-xs shadow-xl flex items-center gap-2 hover:scale-105 transition-all">
+                            <Printer size={16} /> 수료증 PDF 출력
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ADMIN VIEW */}
+        {view === 'admin_home' && (
+          <div className="space-y-12 animate-in fade-in duration-500">
+            <header className="flex justify-between items-end">
+              <div>
+                <h2 className="text-4xl font-black tracking-tight text-red-600">운영진 관리 콘솔</h2>
+                <p className="text-slate-500 mt-2 font-medium">전체 수강생의 신청 현황을 관리하고 수료 여부를 결정합니다.</p>
+              </div>
+              <div className="flex gap-4">
+                <div className="bg-white p-4 rounded-2xl border border-slate-200 text-center w-32 shadow-sm">
+                  <p className="text-[10px] font-black text-slate-400 uppercase mb-1">총 신청</p>
+                  <p className="text-2xl font-black text-[#003876]">{allEnrollments.length}</p>
+                </div>
+                <div className="bg-white p-4 rounded-2xl border border-slate-200 text-center w-32 shadow-sm">
+                  <p className="text-[10px] font-black text-slate-400 uppercase mb-1">수료 완료</p>
+                  <p className="text-2xl font-black text-emerald-600">{allEnrollments.filter(e => e.status === 'COMPLETED').length}</p>
+                </div>
+              </div>
+            </header>
+
+            <div className="bg-white rounded-[2.5rem] border border-slate-200 shadow-sm overflow-hidden">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-slate-50 border-b border-slate-100 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                  <tr>
+                    <th className="p-6">훈련생 정보</th>
+                    <th className="p-6">과정명</th>
+                    <th className="p-6 text-center">상태</th>
+                    <th className="p-6 text-right">관리</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-50">
+                  {allEnrollments.length === 0 ? (
+                    <tr><td colSpan="4" className="p-20 text-center text-slate-300 font-bold uppercase tracking-widest">데이터가 없습니다.</td></tr>
+                  ) : (
+                    allEnrollments.map(e => (
+                      <tr key={e.id} className="hover:bg-slate-50/50 transition-colors">
+                        <td className="p-6">
+                          <div className="font-bold text-slate-800">{e.userName}</div>
+                          <div className="text-[10px] text-slate-400 font-medium">{e.userCompany}</div>
+                        </td>
+                        <td className="p-6">
+                          <div className="text-[10px] font-black text-[#003876] mb-1">{e.id}</div>
+                          <div className="font-bold text-slate-600">{e.name}</div>
+                        </td>
+                        <td className="p-6 text-center">
+                          <span className={`px-3 py-1 rounded-full text-[10px] font-black ${e.status === 'COMPLETED' ? 'bg-emerald-100 text-emerald-600' : 'bg-blue-100 text-blue-600'}`}>
+                            {e.status === 'COMPLETED' ? '수료' : '수강중'}
+                          </span>
+                        </td>
+                        <td className="p-6 text-right">
+                          {e.status === 'APPLIED' && (
+                            <button onClick={() => handleComplete(e.id)} className="bg-emerald-600 text-white px-5 py-2 rounded-xl text-[10px] font-black shadow-lg hover:bg-emerald-700 transition-all">수료 처리 (승인)</button>
+                          )}
+                          {e.status === 'COMPLETED' && (
+                            <span className="text-[10px] font-bold text-slate-300">처리 완료</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <footer className="mt-20 py-16 bg-white border-t border-slate-200 text-center">
+        <div className="flex justify-center gap-8 mb-8 text-[10px] font-black text-slate-300 uppercase tracking-[0.3em]">
+          <span>Full Automation</span>
+          <span>•</span>
+          <span>SQL Data Integrity</span>
+          <span>•</span>
+          <span>PDF Certificates</span>
+        </div>
+        <p className="text-[10px] font-bold text-slate-400">&copy; 2026 PUKYONG NATIONAL UNIVERSITY AX CENTER. ALL RIGHTS RESERVED.</p>
+      </footer>
+    </div>
+  );
+}
