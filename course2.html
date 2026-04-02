@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MLOps AI 코어 엔지니어 과정 - 상세 안내</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@100;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Pretendard', sans-serif; }
+        .sticky-nav { position: sticky; top: 0; z-index: 50; }
+        .gradient-header { background: linear-gradient(135deg, #0f172a 0%, #334155 100%); }
+        .tech-tag { @apply px-2 py-1 bg-slate-100 rounded text-[10px] font-bold text-slate-500; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+
+    <!-- Navigation -->
+    <nav class="sticky-nav bg-white/80 backdrop-blur-md border-b border-slate-200 py-4 px-6">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <a href="index.html" class="flex items-center text-slate-700 hover:text-orange-600 transition font-bold">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                메인으로 돌아가기
+            </a>
+            <div class="text-sm font-semibold text-slate-400 italic">DT AI CAMPUS : COURSE 02</div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="gradient-header text-white py-20 px-4">
+        <div class="max-w-4xl mx-auto">
+            <span class="inline-block px-3 py-1 rounded bg-orange-500/20 text-orange-400 border border-orange-500/30 text-xs font-bold mb-6">코어 엔지니어 과정 02</span>
+            <h1 class="text-3xl md:text-5xl font-black mb-6 leading-tight">
+                MLOps 기반 산업용 AI 모델 고도화 및 <br>서비스 설계 코어 엔지니어 과정
+            </h1>
+            <p class="text-indigo-200 font-medium mb-8 text-lg italic">"이론적 기반을 갖춘 전공자를 실무형 AI 코어 엔지니어로 재탄생"</p>
+            <div class="flex flex-wrap gap-8 text-slate-400 text-sm">
+                <div class="flex items-center"><span class="mr-2 text-white">📅</span> 총 360시간 (2개월)</div>
+                <div class="flex items-center"><span class="mr-2 text-white">🏗️</span> 프로젝트 162시간 (45%)</div>
+                <div class="flex items-center"><span class="mr-2 text-white">🎓</span> 전공자/중급자 심화 과정</div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto py-20 px-4">
+        <!-- Goal Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 mb-24">
+            <div class="lg:col-span-2">
+                <h2 class="text-2xl font-bold mb-6 flex items-center">
+                    <span class="w-1.5 h-6 bg-indigo-500 mr-3 rounded-full"></span>
+                    훈련 목표
+                </h2>
+                <p class="text-lg text-slate-600 leading-relaxed mb-6">
+                    Transformer 모델을 **라이브러리 최소화 기반으로 직접 구현(Scratch Build)**하고, PEFT 기반 모델 최적화 역량을 확보합니다.
+                </p>
+                <p class="text-slate-600 leading-relaxed">
+                    단순 모델링을 넘어 데이터 파이프라인부터 **MLOps 인프라(Triton, MLflow)**까지 전 과정을 직접 설계하고 구현하는 실전 풀스택 코어 인재를 육성하는 것이 본 과정의 핵심입니다.
+                </p>
+            </div>
+            <div class="bg-indigo-900 p-8 rounded-3xl shadow-xl text-white">
+                <h3 class="font-bold mb-6 flex items-center">
+                    <span class="mr-2">🔥</span> 핵심 역량 (Core Tech)
+                </h3>
+                <ul class="space-y-3 text-sm text-indigo-100">
+                    <li class="flex items-start"><span class="mr-2">•</span> Transformer 구조 수학적 원리 분석</li>
+                    <li class="flex items-start"><span class="mr-2">•</span> Triton Inference Server 고성능 서빙</li>
+                    <li class="flex items-start"><span class="mr-2">•</span> LoRA/QLoRA 모델 경량화 전략</li>
+                    <li class="flex items-start"><span class="mr-2">•</span> GitHub Actions 기반 MLOps CI/CD</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Curriculum Table -->
+        <section class="mb-24">
+            <h2 class="text-2xl font-bold mb-10 flex items-center">
+                <span class="w-1.5 h-6 bg-indigo-500 mr-3 rounded-full"></span>
+                상세 커리큘럼 (196h)
+            </h2>
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-500 uppercase">
+                        <tr>
+                            <th class="py-5 px-8">교육 모듈</th>
+                            <th class="py-5 px-8">주요 학습 내용 및 기술 스택</th>
+                            <th class="py-5 px-8 text-center">시간</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 text-sm">
+                        <tr>
+                            <td class="py-6 px-8 font-bold text-slate-700">인프라 & 백엔드</td>
+                            <td class="py-6 px-8 text-slate-600 leading-relaxed">
+                                <div class="mb-2"><span class="tech-tag">Docker</span> <span class="tech-tag">FastAPI</span></div>
+                                ETL 프로세스 설계, 비동기 API 서버 및 DB 연동 아키텍처 구축
+                            </td>
+                            <td class="py-6 px-8 text-center font-medium">28h</td>
+                        </tr>
+                        <tr>
+                            <td class="py-6 px-8 font-bold text-slate-700">모델 서빙 & 관제</td>
+                            <td class="py-6 px-8 text-slate-600 leading-relaxed">
+                                <div class="mb-2"><span class="tech-tag">Triton</span> <span class="tech-tag">Redis</span> <span class="tech-tag">React</span></div>
+                                Triton Inference Server 고성능 서빙 및 실시간 추론 시각화 UI 설계
+                            </td>
+                            <td class="py-6 px-8 text-center font-medium">48h</td>
+                        </tr>
+                        <tr>
+                            <td class="py-6 px-8 font-bold text-slate-700">MLOps 자동화</td>
+                            <td class="py-6 px-8 text-slate-600 leading-relaxed">
+                                <div class="mb-2"><span class="tech-tag">MLflow</span> <span class="tech-tag">GitHub Actions</span></div>
+                                모델 재학습 루프 설계, 데이터 드리프트 감지 및 CI/CD 자동화 파이프라인
+                            </td>
+                            <td class="py-6 px-8 text-center font-medium">24h</td>
+                        </tr>
+                        <tr>
+                            <td class="py-6 px-8 font-bold text-slate-700">모델 최적화 전략</td>
+                            <td class="py-6 px-8 text-slate-600 leading-relaxed">
+                                <div class="mb-2"><span class="tech-tag">LoRA</span> <span class="tech-tag">BitsAndBytes</span></div>
+                                PEFT(LoRA/QLoRA) 미세 조정 및 Quantization 모델 경량화 전략
+                            </td>
+                            <td class="py-6 px-8 text-center font-medium">24h</td>
+                        </tr>
+                        <tr class="bg-indigo-50/30">
+                            <td class="py-6 px-8 font-bold text-indigo-700">Transformer Core</td>
+                            <td class="py-6 px-8 text-slate-700 font-medium leading-relaxed">
+                                <div class="mb-2"><span class="tech-tag bg-indigo-100 text-indigo-600">PyTorch</span> <span class="tech-tag bg-indigo-100 text-indigo-600">Scratch Build</span></div>
+                                **Self-Attention 수학적 원리 분석**, Transformer 직접 구현 및 산업 데이터 적용
+                            </td>
+                            <td class="py-6 px-8 text-center font-bold text-indigo-700">48h</td>
+                        </tr>
+                        <tr>
+                            <td class="py-6 px-8 font-bold text-slate-700">분석 및 검증</td>
+                            <td class="py-6 px-8 text-slate-600 leading-relaxed">
+                                <div class="mb-2"><span class="tech-tag">SHAP</span> <span class="tech-tag">LIME</span></div>
+                                XAI 활용 모델 설명력 확보 및 PoC 기술 검증 설계
+                            </td>
+                            <td class="py-6 px-8 text-center font-medium">24h</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Project Roadmap -->
+        <section class="mb-24">
+            <h2 class="text-2xl font-bold mb-10 flex items-center">
+                <span class="w-1.5 h-6 bg-indigo-500 mr-3 rounded-full"></span>
+                실전 프로젝트 (162h) - 비중 45%
+            </h2>
+            <div class="relative">
+                <div class="absolute left-1/2 -ml-0.5 w-0.5 h-full bg-slate-200 hidden md:block"></div>
+                <div class="space-y-12">
+                    <!-- Step 1 -->
+                    <div class="flex flex-col md:flex-row items-center gap-8 relative">
+                        <div class="flex-1 md:text-right">
+                            <h4 class="font-bold text-indigo-600 text-lg">산업 문제 분석</h4>
+                            <p class="text-sm text-slate-500">도메인별 페인 포인트 발굴 및 데이터 스키마 설계</p>
+                        </div>
+                        <div class="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center text-white font-bold relative z-10 shadow-lg shadow-indigo-200">01</div>
+                        <div class="flex-1"></div>
+                    </div>
+                    <!-- Step 2 -->
+                    <div class="flex flex-col md:flex-row items-center gap-8 relative">
+                        <div class="flex-1"></div>
+                        <div class="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center text-white font-bold relative z-10 shadow-lg shadow-indigo-200">02</div>
+                        <div class="flex-1 text-left">
+                            <h4 class="font-bold text-indigo-600 text-lg">대용량 파이프라인 가동</h4>
+                            <p class="text-sm text-slate-500">데이터 전처리 자동화 및 모델 학습 최적화(Transfer Learning)</p>
+                        </div>
+                    </div>
+                    <!-- Step 3 -->
+                    <div class="flex flex-col md:flex-row items-center gap-8 relative">
+                        <div class="flex-1 md:text-right">
+                            <h4 class="font-bold text-indigo-600 text-lg">모델 경량화 & 통합</h4>
+                            <p class="text-sm text-slate-500">Quantization 배포 및 FE-BE-AI 통합 응용 시스템 완성</p>
+                        </div>
+                        <div class="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center text-white font-bold relative z-10 shadow-lg shadow-indigo-200">03</div>
+                        <div class="flex-1"></div>
+                    </div>
+                    <!-- Step 4 -->
+                    <div class="flex flex-col md:flex-row items-center gap-8 relative">
+                        <div class="flex-1"></div>
+                        <div class="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center text-white font-bold relative z-10 shadow-lg shadow-indigo-200">04</div>
+                        <div class="flex-1 text-left">
+                            <h4 class="font-bold text-indigo-600 text-lg">기술 백서 & 데모데이</h4>
+                            <p class="text-sm text-slate-500">현업 전문가 피드백 기반 검증 및 포트폴리오 완성</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <div class="text-center bg-indigo-950 rounded-[3rem] py-16 px-6 text-white shadow-2xl relative overflow-hidden">
+            <h2 class="text-3xl font-black mb-6">최고의 AI 코어 엔지니어로 도약하세요</h2>
+            <p class="text-indigo-300 mb-10 max-w-2xl mx-auto">
+                2개월의 몰입을 통해 Transformer의 본질을 꿰뚫고 실무 환경의 MLOps를 마스터할 수 있습니다.
+            </p>
+            <div class="flex justify-center gap-4">
+                <a href="index.html#apply" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-10 rounded-2xl transition shadow-lg shadow-orange-500/20">수강 신청하러 가기</a>
+            </div>
+            <!-- Decorative circle -->
+            <div class="absolute -top-12 -right-12 w-48 h-48 bg-indigo-500/10 rounded-full blur-2xl"></div>
+        </div>
+    </main>
+
+    <footer class="py-12 border-t border-slate-200 text-center text-slate-400 text-xs">
+        © 2024 PKNU AI CAMPUS. All rights reserved.
+    </footer>
+
+</body>
+</html>
