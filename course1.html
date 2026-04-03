@@ -10,6 +10,7 @@
         body { font-family: 'Pretendard', sans-serif; }
         .gradient-header { background: linear-gradient(135deg, #1e293b 0%, #334155 100%); }
         .sticky-nav { position: sticky; top: 0; z-index: 50; }
+        .card-hover:hover { transform: translateY(-5px); transition: all 0.3s ease; }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
@@ -23,7 +24,7 @@
                 </svg>
                 메인으로 돌아가기
             </a>
-            <div class="text-sm font-semibold text-slate-500 italic">DT AI CAMPUS : Course 01</div>
+            <div class="text-sm font-semibold text-slate-500 italic uppercase">Course 01 Details</div>
         </div>
     </nav>
 
@@ -54,6 +55,32 @@
     </header>
 
     <main class="max-w-6xl mx-auto py-16 px-4">
+        
+        <!-- NEW: 한눈에 보는 과정 요약 (비전공자 가이드) -->
+        <section class="mb-20">
+            <h2 class="text-2xl font-bold mb-8 flex items-center text-slate-800">
+                <span class="w-2 h-8 bg-orange-500 rounded-full mr-4 shadow-lg shadow-orange-200"></span>
+                한눈에 보는 과정 요약 (비전공자 가이드)
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-t-blue-500 card-hover">
+                    <div class="text-4xl mb-4">🏠</div>
+                    <h3 class="font-bold text-lg mb-2 text-slate-800">AI의 집 짓기</h3>
+                    <p class="text-sm text-slate-500 leading-relaxed italic">누구나 접속할 수 있는 예쁜 화면과 데이터를 저장할 튼튼한 창고(웹사이트)를 처음부터 끝까지 직접 만듭니다.</p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-t-indigo-500 card-hover">
+                    <div class="text-4xl mb-4">📖</div>
+                    <h3 class="font-bold text-lg mb-2 text-slate-800">AI 지식 가르치기</h3>
+                    <p class="text-sm text-slate-500 leading-relaxed italic">우리 회사의 매뉴얼이나 문서를 AI에게 읽혀, 거짓말하지 않고 정확한 정보만 대답하도록 똑똑하게 교육합니다.</p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-t-orange-500 card-hover">
+                    <div class="text-4xl mb-4">🤖</div>
+                    <h3 class="font-bold text-lg mb-2 text-slate-800">스스로 일하는 AI</h3>
+                    <p class="text-sm text-slate-500 leading-relaxed italic">단순한 챗봇을 넘어 직접 계획을 세우고, 정보를 찾고, 결과를 메일로 보내는 등 자율형 비서(Agent)를 구축합니다.</p>
+                </div>
+            </div>
+        </section>
+
         <!-- Course Objectives -->
         <section class="mb-20">
             <h2 class="text-2xl font-bold mb-8 flex items-center">
@@ -63,7 +90,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
                     <p class="text-lg leading-relaxed text-slate-700">
-                        <b>"머신러닝 기반의 자율형 에이전트 설계 역량"</b>과 <b>"풀스택 서비스 구현 능력"</b>을 갖춘 실무형 AI 엔지니어를 양성합니다. 데이터 파이프라인부터 LLM 최적화, MLOps까지 AI 서비스의 전주기를 주도합니다.
+                       <b>"머신러닝 기반의 자율형 에이전트 설계 역량"</b>과 <b>"풀스택 서비스 구현 능력"</b>을 갖춘 실무형 AI 엔지니어를 양성합니다. 데이터 파이프라인부터 LLM 최적화, MLOps까지 AI 서비스의 전주기를 주도합니다.
                     </p>
                 </div>
                 <div class="bg-blue-600 p-8 rounded-2xl shadow-lg text-white">
@@ -78,7 +105,7 @@
             </div>
         </section>
 
-        <!-- Detailed Curriculum -->
+        <!-- Detailed Curriculum (Original Table Maintained) -->
         <section class="mb-20">
             <h2 class="text-2xl font-bold mb-8 flex items-center">
                 <span class="w-2 h-8 bg-blue-600 rounded-full mr-4"></span>
@@ -122,7 +149,7 @@
                             <td class="py-6 px-6 font-bold">AI 모델링 & RAG</td>
                             <td class="py-6 px-6 leading-relaxed">
                                 <span class="block text-blue-600 text-xs font-bold mb-1">[PyTorch, OpenAI, ChromaDB]</span>
-                                딥러닝 기초 구현, 프롬프트 엔지니어링, Vector DB 연동형 RAG 시스템 구축
+                                딥러닝 기초 모델링, 프롬프트 엔지니어링, Vector DB 연동형 RAG 시스템 구축
                             </td>
                             <td class="py-6 px-6 text-center font-medium">140h</td>
                         </tr>
@@ -170,7 +197,7 @@
                 <div class="bg-white p-6 rounded-xl border-l-4 border-blue-400 shadow-sm">
                     <div class="text-xs font-bold text-blue-400 mb-2">STAGE 02</div>
                     <h4 class="font-bold mb-2">인프라 구축</h4>
-                    <p class="text-sm text-slate-500">고급 RAG 시스템 및 외부 도구 인터페이스(API) 개발</p>
+                    <p class="text-sm text-slate-500">데이터 파이프라인 및 고성능 RAG 시스템 백엔드 개발</p>
                 </div>
                 <div class="bg-white p-6 rounded-xl border-l-4 border-indigo-500 shadow-sm">
                     <div class="text-xs font-bold text-indigo-500 mb-2">STAGE 03</div>
@@ -198,7 +225,7 @@
     </main>
 
     <footer class="py-12 border-t border-slate-200 text-center text-slate-400 text-sm">
-        © 2024 DT AI CAMPUS. All rights reserved.
+        © 2024 PKNU AI CAMPUS. All rights reserved.
     </footer>
 
 </body>
