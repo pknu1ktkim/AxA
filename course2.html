@@ -11,6 +11,7 @@
         .sticky-nav { position: sticky; top: 0; z-index: 50; }
         .gradient-header { background: linear-gradient(135deg, #0f172a 0%, #334155 100%); }
         .tech-tag { @apply px-2 py-1 bg-slate-100 rounded text-[10px] font-bold text-slate-500; }
+        .card-hover:hover { transform: translateY(-5px); transition: all 0.3s ease; }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
@@ -18,13 +19,13 @@
     <!-- Navigation -->
     <nav class="sticky-nav bg-white/80 backdrop-blur-md border-b border-slate-200 py-4 px-6">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <a href="index.html" class="flex items-center text-slate-700 hover:text-orange-600 transition font-bold">
+            <a href="index.html" class="flex items-center text-slate-700 hover:text-indigo-600 transition font-bold">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
                 메인으로 돌아가기
             </a>
-            <div class="text-sm font-semibold text-slate-400 italic">DT AI CAMPUS : COURSE 02</div>
+            <div class="text-sm font-semibold text-slate-400 italic uppercase">Course 02 Details</div>
         </div>
     </nav>
 
@@ -44,41 +45,69 @@
         </div>
     </header>
 
-    <main class="max-w-6xl mx-auto py-20 px-4">
+    <main class="max-w-6xl mx-auto py-16 px-4">
+        
+        <!-- NEW: 한눈에 보는 과정 요약 (중급자 가이드) -->
+        <section class="mb-20">
+            <h2 class="text-2xl font-bold mb-8 flex items-center text-slate-800">
+                <span class="w-2 h-8 bg-orange-500 rounded-full mr-4 shadow-lg shadow-orange-200"></span>
+                한눈에 보는 과정 요약 (중급자 가이드)
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-t-indigo-500 card-hover text-center md:text-left">
+                    <div class="text-4xl mb-4">⚙️</div>
+                    <h3 class="font-bold text-lg mb-2 text-slate-800">AI 엔진 조립하기</h3>
+                    <p class="text-sm text-slate-500 leading-relaxed italic">챗GPT의 심장인 '트랜스포머'를 라이브러리 없이 직접 코딩하며 AI의 작동 원리를 밑바닥부터 파헤칩니다.</p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-t-slate-700 card-hover text-center md:text-left">
+                    <div class="text-4xl mb-4">⚖️</div>
+                    <h3 class="font-bold text-lg mb-2 text-slate-800">AI 다이어트 시키기</h3>
+                    <p class="text-sm text-slate-500 leading-relaxed italic">거대한 AI 모델을 성능은 유지하면서 크기만 줄여, 아주 가볍고 빠르게 작동하도록 최적화(경량화)합니다.</p>
+                </div>
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 border-t-4 border-t-orange-500 card-hover text-center md:text-left">
+                    <div class="text-4xl mb-4">🏭</div>
+                    <h3 class="font-bold text-lg mb-2 text-slate-800">AI 자동화 공장 세우기</h3>
+                    <p class="text-sm text-slate-500 leading-relaxed italic">AI가 늘 최상의 실력을 유지하게 자동으로 재학습시키고 배포하는 MLOps 공정을 구축합니다.</p>
+                </div>
+            </div>
+        </section>
+
         <!-- Goal Section -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 mb-24">
-            <div class="lg:col-span-2">
-                <h2 class="text-2xl font-bold mb-6 flex items-center">
-                    <span class="w-1.5 h-6 bg-indigo-500 mr-3 rounded-full"></span>
-                    훈련 목표
-                </h2>
-                <p class="text-lg text-slate-600 leading-relaxed mb-6">
+        <section class="mb-20">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 mb-12">
+                <div class="lg:col-span-2">
+                    <h2 class="text-2xl font-bold mb-6 flex items-center">
+                        <span class="w-1.5 h-6 bg-indigo-500 mr-3 rounded-full"></span>
+                        훈련 목표
+                    </h2>
+                     <p class="text-lg text-slate-600 leading-relaxed mb-6">
                     Transformer 모델을 <b>라이브러리 최소화 기반으로 직접 구현(Scratch Build)</b>하고, <b>PEFT 기반 모델 최적화 역량</b>을 확보합니다.
                 </p>
                 <p class="text-slate-600 leading-relaxed">
                     단순 모델링을 넘어 데이터 파이프라인부터 <b>MLOps 인프라(Triton, MLflow)</b>까지 전 과정을 직접 설계하고 구현하는 실전 풀스택 코어 인재를 육성하는 것이 본 과정의 핵심입니다.
                 </p>
+                </div>
+                <div class="bg-indigo-900 p-8 rounded-3xl shadow-xl text-white">
+                    <h3 class="font-bold mb-6 flex items-center">
+                        <span class="mr-2 text-orange-400">🔥</span> 핵심 역량 (Core Tech)
+                    </h3>
+                    <ul class="space-y-3 text-sm text-indigo-100">
+                        <li class="flex items-start"><span class="mr-2">•</span> Transformer 구조 수학적 원리 분석</li>
+                        <li class="flex items-start"><span class="mr-2">•</span> Triton Inference Server 고성능 서빙</li>
+                        <li class="flex items-start"><span class="mr-2">•</span> LoRA/QLoRA 모델 경량화 전략</li>
+                        <li class="flex items-start"><span class="mr-2">•</span> GitHub Actions 기반 MLOps CI/CD</li>
+                    </ul>
+                </div>
             </div>
-            <div class="bg-indigo-900 p-8 rounded-3xl shadow-xl text-white">
-                <h3 class="font-bold mb-6 flex items-center">
-                    <span class="mr-2">🔥</span> 핵심 역량 (Core Tech)
-                </h3>
-                <ul class="space-y-3 text-sm text-indigo-100">
-                    <li class="flex items-start"><span class="mr-2">•</span> Transformer 구조 수학적 원리 분석</li>
-                    <li class="flex items-start"><span class="mr-2">•</span> Triton Inference Server 고성능 서빙</li>
-                    <li class="flex items-start"><span class="mr-2">•</span> LoRA/QLoRA 모델 경량화 전략</li>
-                    <li class="flex items-start"><span class="mr-2">•</span> GitHub Actions 기반 MLOps CI/CD</li>
-                </ul>
-            </div>
-        </div>
+        </section>
 
-        <!-- Curriculum Table -->
-        <section class="mb-24">
-            <h2 class="text-2xl font-bold mb-10 flex items-center">
-                <span class="w-1.5 h-6 bg-indigo-500 mr-3 rounded-full"></span>
-                상세 커리큘럼 (196h)
+        <!-- Detailed Curriculum Table -->
+        <section class="mb-20">
+            <h2 class="text-2xl font-bold mb-8 flex items-center text-slate-800">
+                <span class="w-2 h-8 bg-indigo-600 rounded-full mr-4"></span>
+                상세 교육 커리큘럼 (정규 교과 196h)
             </h2>
-            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                 <table class="w-full text-left">
                     <thead class="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-500 uppercase">
                         <tr>
@@ -91,15 +120,15 @@
                         <tr>
                             <td class="py-6 px-8 font-bold text-slate-700">인프라 & 백엔드</td>
                             <td class="py-6 px-8 text-slate-600 leading-relaxed">
-                                <div class="mb-2"><span class="tech-tag">Docker</span> <span class="tech-tag">FastAPI</span></div>
-                                ETL 프로세스 설계, 비동기 API 서버 및 DB 연동 아키텍처 구축
+                                <div class="mb-2 flex gap-1.5"><span class="tech-tag">Docker</span> <span class="tech-tag">FastAPI</span></div>
+                                ETL 프로세스 설계, FastAPI 기반 비동기 API 서버 및 DB 연동 아키텍처 구축
                             </td>
                             <td class="py-6 px-8 text-center font-medium">28h</td>
                         </tr>
                         <tr>
                             <td class="py-6 px-8 font-bold text-slate-700">모델 서빙 & 관제</td>
                             <td class="py-6 px-8 text-slate-600 leading-relaxed">
-                                <div class="mb-2"><span class="tech-tag">Triton</span> <span class="tech-tag">Redis</span> <span class="tech-tag">React</span></div>
+                                <div class="mb-2 flex gap-1.5"><span class="tech-tag">Triton</span> <span class="tech-tag">Redis</span> <span class="tech-tag">React</span></div>
                                 Triton Inference Server 고성능 서빙 및 실시간 추론 시각화 UI 설계
                             </td>
                             <td class="py-6 px-8 text-center font-medium">48h</td>
@@ -107,7 +136,7 @@
                         <tr>
                             <td class="py-6 px-8 font-bold text-slate-700">MLOps 자동화</td>
                             <td class="py-6 px-8 text-slate-600 leading-relaxed">
-                                <div class="mb-2"><span class="tech-tag">MLflow</span> <span class="tech-tag">GitHub Actions</span></div>
+                                <div class="mb-2 flex gap-1.5"><span class="tech-tag">MLflow</span> <span class="tech-tag">GitHub Actions</span></div>
                                 모델 재학습 루프 설계, 데이터 드리프트 감지 및 CI/CD 자동화 파이프라인
                             </td>
                             <td class="py-6 px-8 text-center font-medium">24h</td>
@@ -115,23 +144,23 @@
                         <tr>
                             <td class="py-6 px-8 font-bold text-slate-700">모델 최적화 전략</td>
                             <td class="py-6 px-8 text-slate-600 leading-relaxed">
-                                <div class="mb-2"><span class="tech-tag">LoRA</span> <span class="tech-tag">BitsAndBytes</span></div>
-                                PEFT(LoRA/QLoRA) 미세 조정 및 Quantization 모델 경량화 전략
+                                <div class="mb-2 flex gap-1.5"><span class="tech-tag">LoRA</span> <span class="tech-tag">BitsAndBytes</span></div>
+                                PEFT(LoRA/QLoRA) 미세 조정 및 모델 경량화(Quantization) 전략
                             </td>
                             <td class="py-6 px-8 text-center font-medium">24h</td>
                         </tr>
                         <tr class="bg-indigo-50/30">
                             <td class="py-6 px-8 font-bold text-indigo-700">Transformer Core</td>
                             <td class="py-6 px-8 text-slate-700 font-medium leading-relaxed">
-                                <div class="mb-2"><span class="tech-tag bg-indigo-100 text-indigo-600">PyTorch</span> <span class="tech-tag bg-indigo-100 text-indigo-600">Scratch Build</span></div>
-                                **Self-Attention 수학적 원리 분석**, Transformer 직접 구현 및 산업 데이터 적용
+                                <div class="mb-2 flex gap-1.5"><span class="tech-tag bg-indigo-600 text-white border-none">PyTorch</span> <span class="tech-tag bg-indigo-600 text-white border-none">Scratch Build</span></div>
+                                Self-Attention 수학적 원리 분석, Transformer 직접 구현 및 산업 데이터 적용
                             </td>
                             <td class="py-6 px-8 text-center font-bold text-indigo-700">48h</td>
                         </tr>
                         <tr>
                             <td class="py-6 px-8 font-bold text-slate-700">분석 및 검증</td>
                             <td class="py-6 px-8 text-slate-600 leading-relaxed">
-                                <div class="mb-2"><span class="tech-tag">SHAP</span> <span class="tech-tag">LIME</span></div>
+                                <div class="mb-2 flex gap-1.5"><span class="tech-tag">SHAP</span> <span class="tech-tag">LIME</span></div>
                                 XAI 활용 모델 설명력 확보 및 PoC 기술 검증 설계
                             </td>
                             <td class="py-6 px-8 text-center font-medium">24h</td>
@@ -142,10 +171,10 @@
         </section>
 
         <!-- Project Roadmap -->
-        <section class="mb-24">
-            <h2 class="text-2xl font-bold mb-10 flex items-center">
-                <span class="w-1.5 h-6 bg-indigo-500 mr-3 rounded-full"></span>
-                실전 프로젝트 (162h) - 비중 45%
+        <section class="mb-20">
+            <h2 class="text-2xl font-bold mb-10 flex items-center text-slate-800">
+                <span class="w-2 h-8 bg-indigo-600 rounded-full mr-4"></span>
+                실전 프로젝트 로드맵 (162h)
             </h2>
             <div class="relative">
                 <div class="absolute left-1/2 -ml-0.5 w-0.5 h-full bg-slate-200 hidden md:block"></div>
