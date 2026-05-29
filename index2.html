@@ -1,0 +1,603 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.dw{background:#0f1b2e;font-family:'Noto Sans KR',sans-serif;font-size:12px;color:#e2e8f0;border-radius:8px;overflow:hidden}
+.topbar{background:#0a1628;border-bottom:1px solid #1e3a5f;padding:0 20px;height:44px;display:flex;align-items:center;justify-content:space-between}
+.logo-badge{background:#1a73e8;color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:.5px}
+.topbar-title{font-size:13px;font-weight:600;color:#93c5fd;margin-left:10px}
+.topbar-right{display:flex;align-items:center;gap:14px;font-size:11px;color:#64748b}
+.live-dot{width:7px;height:7px;background:#22c55e;border-radius:50%;display:inline-block;animation:blink 2s infinite}
+.live-lbl{color:#22c55e;display:flex;align-items:center;gap:5px}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+
+.nav{background:#0a1628;border-bottom:1px solid #1e3a5f;display:flex;align-items:center;padding:0 20px;gap:2px}
+.nav-tab{padding:10px 16px;font-size:11px;font-weight:600;color:#475569;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.nav-tab:hover{color:#93c5fd}
+.nav-tab.active{color:#60a5fa;border-bottom-color:#3b82f6}
+.nav-tab i{font-size:13px}
+
+.page{display:none;padding:16px 20px;display:none;flex-direction:column;gap:14px}
+.page.active{display:flex}
+
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi-card{background:#13243d;border:1px solid #1e3a5f;border-radius:8px;padding:14px 16px;position:relative;overflow:hidden;cursor:pointer;transition:border-color .2s,transform .15s}
+.kpi-card:hover{border-color:#3b82f6;transform:translateY(-2px)}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:8px 8px 0 0}
+.kpi-card.blue::before{background:#3b82f6}
+.kpi-card.green::before{background:#22c55e}
+.kpi-card.amber::before{background:#f59e0b}
+.kpi-card.purple::before{background:#a78bfa}
+.kpi-lbl{font-size:11px;color:#64748b;margin-bottom:6px}
+.kpi-val{font-size:24px;font-weight:700;line-height:1}
+.kpi-card.blue .kpi-val{color:#60a5fa}
+.kpi-card.green .kpi-val{color:#4ade80}
+.kpi-card.amber .kpi-val{color:#fbbf24}
+.kpi-card.purple .kpi-val{color:#c4b5fd}
+.kpi-sub{font-size:10px;margin-top:5px;color:#475569}
+.kpi-badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;padding:2px 7px;border-radius:4px;margin-top:5px}
+.kpi-badge.up{background:rgba(34,197,94,.15);color:#4ade80}
+.kpi-badge.warn{background:rgba(245,158,11,.15);color:#fbbf24}
+.kpi-badge.info{background:rgba(59,130,246,.15);color:#60a5fa}
+.kpi-ico{position:absolute;right:14px;top:14px;font-size:22px;opacity:.18}
+.click-hint{position:absolute;bottom:8px;right:10px;font-size:9px;color:#334155}
+
+/* panels */
+.row2{display:grid;grid-template-columns:1.5fr 1fr;gap:14px}
+.row2b{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.row4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.panel{background:#13243d;border:1px solid #1e3a5f;border-radius:8px;padding:14px 16px}
+.panel-title{font-size:11px;font-weight:700;color:#93c5fd;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.panel-title span{width:3px;height:12px;background:#3b82f6;border-radius:2px;display:inline-block}
+
+/* bar chart */
+.bar-chart{display:flex;align-items:flex-end;gap:5px;height:100px;padding-bottom:18px;position:relative}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bar{width:100%;border-radius:3px 3px 0 0}
+.bar-lbl{font-size:9px;color:#475569}
+
+/* dist grid */
+.dist-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+.dist-item{background:#0a1628;border-radius:5px;padding:6px 7px}
+.dist-name{font-size:10px;color:#64748b}
+.dist-bar-bg{background:#1e3a5f;border-radius:2px;height:4px;margin-top:3px}
+.dist-bar-fill{background:#3b82f6;border-radius:2px;height:4px}
+.dist-count{font-size:11px;font-weight:700;color:#93c5fd;margin-top:2px}
+
+/* prog */
+.prog-list{display:flex;flex-direction:column;gap:9px}
+.prog-hd{display:flex;justify-content:space-between;margin-bottom:3px}
+.prog-name{font-size:11px;color:#94a3b8}
+.prog-val{font-size:11px;font-weight:700;color:#60a5fa}
+.prog-bg{background:#1e3a5f;border-radius:3px;height:5px}
+.prog-fill{border-radius:3px;height:5px}
+
+/* sat */
+.sat-row{display:flex;align-items:center;gap:10px;margin-top:4px}
+.sat-score{font-size:32px;font-weight:700;color:#4ade80;line-height:1}
+.sat-dist{display:flex;flex-direction:column;gap:4px;flex:1}
+.sat-bar-row{display:flex;align-items:center;gap:6px;font-size:10px;color:#475569}
+.sat-bar-bg{flex:1;background:#1e3a5f;border-radius:2px;height:5px}
+.sat-bar-f{height:5px;border-radius:2px;background:#22c55e}
+
+/* mini table */
+.mini-table{width:100%;font-size:10px;border-collapse:collapse;margin-top:6px}
+.mini-table th{color:#475569;font-weight:600;text-align:left;padding:4px 6px;border-bottom:1px solid #1e3a5f}
+.mini-table td{padding:5px 6px;border-bottom:1px solid #0f1b2e;color:#94a3b8}
+
+/* case */
+.case-list{display:flex;flex-direction:column;gap:7px}
+.case-item{background:#0a1628;border-radius:5px;padding:8px 10px;border-left:2px solid #3b82f6}
+.case-item.gold{border-color:#f59e0b}
+.case-title{font-size:11px;font-weight:600;color:#e2e8f0}
+.case-meta{font-size:10px;color:#475569;margin-top:2px}
+.case-tag{display:inline-block;font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(59,130,246,.2);color:#60a5fa;margin-right:4px}
+.case-tag.gold{background:rgba(245,158,11,.2);color:#fbbf24}
+
+/* detail page */
+.back-btn{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#3b82f6;cursor:pointer;margin-bottom:6px;padding:4px 0}
+.back-btn:hover{color:#93c5fd}
+.detail-hd{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:2px}
+.detail-title{font-size:16px;font-weight:700;color:#e2e8f0}
+.detail-sub{font-size:11px;color:#64748b;margin-top:3px}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.stat-box{background:#13243d;border:1px solid #1e3a5f;border-radius:8px;padding:12px 14px}
+.stat-lbl{font-size:10px;color:#64748b;margin-bottom:5px}
+.stat-val{font-size:22px;font-weight:700;color:#60a5fa;line-height:1}
+.stat-val.green{color:#4ade80}
+.stat-val.amber{color:#fbbf24}
+.stat-val.purple{color:#c4b5fd}
+.stat-note{font-size:10px;color:#475569;margin-top:3px}
+
+.comp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.comp-box{background:#13243d;border:1px solid #1e3a5f;border-radius:8px;padding:14px;text-align:center}
+.comp-type{font-size:10px;color:#64748b;margin-bottom:5px}
+.comp-pct{font-size:22px;font-weight:700;color:#60a5fa}
+.comp-sub{font-size:9px;color:#475569;margin-top:4px}
+
+.radar-wrap{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.radar-item{display:flex;align-items:center;gap:10px;font-size:11px}
+.radar-lbl{width:80px;color:#94a3b8;flex-shrink:0}
+.radar-bg{flex:1;background:#1e3a5f;border-radius:3px;height:6px}
+.radar-fill{border-radius:3px;height:6px}
+.radar-score{width:30px;text-align:right;color:#60a5fa;font-weight:700}
+
+.full-case-item{background:#0a1628;border-radius:6px;padding:12px 14px;border-left:2px solid #3b82f6;margin-bottom:8px}
+.full-case-item.gold{border-color:#f59e0b}
+.full-case-item.purple{border-color:#a78bfa}
+.full-case-title{font-size:12px;font-weight:700;color:#e2e8f0;margin-bottom:5px}
+.full-case-body{font-size:10px;color:#64748b;line-height:1.6;margin-bottom:6px}
+.full-tag{display:inline-block;font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(59,130,246,.2);color:#60a5fa;margin-right:4px}
+.full-tag.gold{background:rgba(245,158,11,.2);color:#fbbf24}
+.full-tag.purple{background:rgba(167,139,250,.2);color:#c4b5fd}
+
+.divider{border:none;border-top:1px solid #1e3a5f;margin:10px 0}
+.tag{font-size:10px;padding:4px 10px;border-radius:12px;background:#1e3a5f;color:#93c5fd;display:inline-block}
+.tag.hi{background:rgba(59,130,246,.2);color:#60a5fa}
+.sec-title{font-size:10px;font-weight:700;color:#64748b;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+.instr-table{width:100%;font-size:11px;border-collapse:collapse}
+.instr-table th{color:#475569;font-weight:600;text-align:left;padding:5px 8px;border-bottom:1px solid #1e3a5f}
+.instr-table td{padding:6px 8px;border-bottom:1px solid #0f1b2e;color:#94a3b8}
+.age-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
+.age-box{background:#0a1628;border-radius:5px;padding:8px;text-align:center}
+.age-lbl{font-size:10px;color:#64748b;margin-bottom:3px}
+.age-val{font-size:16px;font-weight:700;color:#60a5fa}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet">
+<h2 class="sr-only">부산광역시 AI디지털배움터 운영현황 대시보드 전체 Mockup</h2>
+
+<div class="dw">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div style="display:flex;align-items:center">
+      <span class="logo-badge">AI배움터</span>
+      <span class="topbar-title">부산광역시 AI디지털배움터 운영현황 대시보드</span>
+    </div>
+    <div class="topbar-right">
+      <span>2026. 05. 29 (금) &nbsp;|&nbsp; 국립부경대학교 산학협력단</span>
+      <span class="live-lbl"><span class="live-dot"></span>LIVE</span>
+    </div>
+  </div>
+
+  <!-- NAV TABS -->
+  <div class="nav">
+    <div class="nav-tab active" id="tab-main" onclick="showPage('main')">
+      <i class="ti ti-layout-dashboard" aria-hidden="true"></i> 메인 대시보드
+    </div>
+    <div class="nav-tab" id="tab-participants" onclick="showPage('participants')">
+      <i class="ti ti-users" aria-hidden="true"></i> 교육 참여인원
+    </div>
+    <div class="nav-tab" id="tab-completion" onclick="showPage('completion')">
+      <i class="ti ti-certificate" aria-hidden="true"></i> 교육 이수율
+    </div>
+    <div class="nav-tab" id="tab-satisfaction" onclick="showPage('satisfaction')">
+      <i class="ti ti-star" aria-hidden="true"></i> 교육 만족도
+    </div>
+    <div class="nav-tab" id="tab-cases" onclick="showPage('cases')">
+      <i class="ti ti-trophy" aria-hidden="true"></i> 우수사례
+    </div>
+  </div>
+
+  <!-- ========== PAGE: 메인 ========== -->
+  <div class="page active" id="page-main">
+
+    <div>
+      <div class="sec-title">핵심 성과 지표 (KPI) — 2026년 누적</div>
+      <div class="kpi-grid">
+        <div class="kpi-card blue" onclick="showPage('participants')">
+          <div class="kpi-ico">👥</div>
+          <div class="kpi-lbl">누적 참여자 수</div>
+          <div class="kpi-val">62,840<span style="font-size:13px;font-weight:400">명</span></div>
+          <div class="kpi-sub">연간 목표: 120,000명</div>
+          <span class="kpi-badge info">목표 대비 52.4%</span>
+          <div class="click-hint">상세 보기 →</div>
+        </div>
+        <div class="kpi-card green" onclick="showPage('completion')">
+          <div class="kpi-ico">📋</div>
+          <div class="kpi-lbl">교육 이수율</div>
+          <div class="kpi-val">91.2<span style="font-size:13px;font-weight:400">%</span></div>
+          <div class="kpi-sub">이수 완료: 57,310명</div>
+          <span class="kpi-badge up">▲ 전월 대비 +1.4%p</span>
+          <div class="click-hint">상세 보기 →</div>
+        </div>
+        <div class="kpi-card amber" onclick="showPage('satisfaction')">
+          <div class="kpi-ico">📊</div>
+          <div class="kpi-lbl">교육 만족도 평균</div>
+          <div class="kpi-val">4.6<span style="font-size:13px;font-weight:400"> / 5.0</span></div>
+          <div class="kpi-sub">응답 건수: 41,230건</div>
+          <span class="kpi-badge warn">전월 대비 +0.1점</span>
+          <div class="click-hint">상세 보기 →</div>
+        </div>
+        <div class="kpi-card purple" onclick="showPage('cases')">
+          <div class="kpi-ico">⭐</div>
+          <div class="kpi-lbl">우수사례 발굴</div>
+          <div class="kpi-val">18<span style="font-size:13px;font-weight:400">건</span></div>
+          <div class="kpi-sub">이번달: 5건 신규 등록</div>
+          <span class="kpi-badge info">월간 목표 달성</span>
+          <div class="click-hint">상세 보기 →</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row2">
+      <div class="panel">
+        <div class="panel-title"><span></span>월별 참여자 현황</div>
+        <div class="bar-chart">
+          <div style="position:absolute;left:0;top:0;font-size:9px;color:#334155">15,000</div>
+          <div style="position:absolute;left:0;bottom:18px;font-size:9px;color:#334155">0</div>
+          <div class="bar-wrap"><div class="bar" style="height:52%;background:#1e40af"></div><div class="bar-lbl">1월</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:61%;background:#1e40af"></div><div class="bar-lbl">2월</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:70%;background:#2563eb"></div><div class="bar-lbl">3월</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:76%;background:#2563eb"></div><div class="bar-lbl">4월</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:87%;background:#3b82f6;border:1px solid #60a5fa"></div><div class="bar-lbl" style="color:#60a5fa;font-weight:700">5월</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:20%;background:#1e3a5f;border:1px dashed #334155"></div><div class="bar-lbl" style="color:#334155">6월</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:20%;background:#1e3a5f;border:1px dashed #334155"></div><div class="bar-lbl" style="color:#334155">7월</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:20%;background:#1e3a5f;border:1px dashed #334155"></div><div class="bar-lbl" style="color:#334155">8월</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:20%;background:#1e3a5f;border:1px dashed #334155"></div><div class="bar-lbl" style="color:#334155">9월</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:20%;background:#1e3a5f;border:1px dashed #334155"></div><div class="bar-lbl" style="color:#334155">10월</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:20%;background:#1e3a5f;border:1px dashed #334155"></div><div class="bar-lbl" style="color:#334155">11월</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:20%;background:#1e3a5f;border:1px dashed #334155"></div><div class="bar-lbl" style="color:#334155">12월</div></div>
+        </div>
+        <div style="display:flex;gap:14px;margin-top:4px">
+          <span style="font-size:9px;display:flex;align-items:center;gap:4px;color:#64748b"><span style="width:8px;height:8px;border-radius:2px;background:#3b82f6;display:inline-block"></span>실적</span>
+          <span style="font-size:9px;display:flex;align-items:center;gap:4px;color:#64748b"><span style="width:8px;height:8px;border-radius:2px;border:1px dashed #334155;display:inline-block"></span>예정</span>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><span></span>구·군별 운영현황</div>
+        <div class="dist-grid">
+          <div class="dist-item"><div class="dist-name">해운대구</div><div class="dist-bar-bg"><div class="dist-bar-fill" style="width:95%;background:#22c55e"></div></div><div class="dist-count" style="color:#4ade80">4,560</div></div>
+          <div class="dist-item"><div class="dist-name">부산진구</div><div class="dist-bar-bg"><div class="dist-bar-fill" style="width:91%;background:#22c55e"></div></div><div class="dist-count" style="color:#4ade80">4,120</div></div>
+          <div class="dist-item"><div class="dist-name">동래구</div><div class="dist-bar-bg"><div class="dist-bar-fill" style="width:85%"></div></div><div class="dist-count">3,540</div></div>
+          <div class="dist-item"><div class="dist-name">남구</div><div class="dist-bar-bg"><div class="dist-bar-fill" style="width:79%"></div></div><div class="dist-count">3,180</div></div>
+          <div class="dist-item"><div class="dist-name">북구</div><div class="dist-bar-bg"><div class="dist-bar-fill" style="width:72%"></div></div><div class="dist-count">2,890</div></div>
+          <div class="dist-item"><div class="dist-name">중구</div><div class="dist-bar-bg"><div class="dist-bar-fill" style="width:82%"></div></div><div class="dist-count">2,840</div></div>
+          <div class="dist-item"><div class="dist-name">사하구</div><div class="dist-bar-bg"><div class="dist-bar-fill" style="width:66%"></div></div><div class="dist-count">2,640</div></div>
+          <div class="dist-item"><div class="dist-name">서구</div><div class="dist-bar-bg"><div class="dist-bar-fill" style="width:75%"></div></div><div class="dist-count">2,460</div></div>
+          <div class="dist-item"><div class="dist-name">금정구</div><div class="dist-bar-bg"><div class="dist-bar-fill" style="width:58%"></div></div><div class="dist-count">2,300</div></div>
+          <div class="dist-item"><div class="dist-name">동구</div><div class="dist-bar-bg"><div class="dist-bar-fill" style="width:68%"></div></div><div class="dist-count">2,200</div></div>
+          <div class="dist-item"><div class="dist-name">영도구</div><div class="dist-bar-bg"><div class="dist-bar-fill" style="width:60%"></div></div><div class="dist-count">1,920</div></div>
+          <div class="dist-item"><div class="dist-name">강서구</div><div class="dist-bar-bg"><div class="dist-bar-fill" style="width:42%;background:#f59e0b"></div></div><div class="dist-count" style="color:#fbbf24">1,640</div></div>
+          <div class="dist-item"><div class="dist-name">기장군</div><div class="dist-bar-bg"><div class="dist-bar-fill" style="width:38%"></div></div><div class="dist-count">1,420</div></div>
+          <div class="dist-item"><div class="dist-name">연제구</div><div class="dist-bar-bg"><div class="dist-bar-fill" style="width:35%"></div></div><div class="dist-count">1,380</div></div>
+          <div class="dist-item"><div class="dist-name">수영구</div><div class="dist-bar-bg"><div class="dist-bar-fill" style="width:31%"></div></div><div class="dist-count">1,260</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row3">
+      <div class="panel">
+        <div class="panel-title"><span></span>교육 유형별 참여 비율</div>
+        <div class="prog-list">
+          <div><div class="prog-hd"><span class="prog-name">강의형 교육</span><span class="prog-val">48%</span></div><div class="prog-bg"><div class="prog-fill" style="width:48%;background:#3b82f6"></div></div></div>
+          <div><div class="prog-hd"><span class="prog-name">부스형 교육</span><span class="prog-val">31%</span></div><div class="prog-bg"><div class="prog-fill" style="width:31%;background:#22c55e"></div></div></div>
+          <div><div class="prog-hd"><span class="prog-name">에듀버스</span><span class="prog-val">14%</span></div><div class="prog-bg"><div class="prog-fill" style="width:14%;background:#f59e0b"></div></div></div>
+          <div><div class="prog-hd"><span class="prog-name">AI 특화 교육</span><span class="prog-val">7%</span></div><div class="prog-bg"><div class="prog-fill" style="width:7%;background:#a78bfa"></div></div></div>
+        </div>
+        <div class="divider"></div>
+        <div style="display:flex;justify-content:space-between">
+          <div style="text-align:center"><div style="font-size:10px;color:#475569">취약계층 비율</div><div style="font-size:18px;font-weight:700;color:#c4b5fd">38.4%</div></div>
+          <div style="text-align:center"><div style="font-size:10px;color:#475569">AI교육 비율</div><div style="font-size:18px;font-weight:700;color:#60a5fa">22.1%</div></div>
+          <div style="text-align:center"><div style="font-size:10px;color:#475569">재참여율</div><div style="font-size:18px;font-weight:700;color:#4ade80">17.8%</div></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><span></span>교육 만족도 현황</div>
+        <div class="sat-row">
+          <div><div class="sat-score">4.6</div><div style="font-size:10px;color:#475569;text-align:center">/ 5.0점</div></div>
+          <div class="sat-dist">
+            <div class="sat-bar-row">5점 <div class="sat-bar-bg"><div class="sat-bar-f" style="width:72%"></div></div><span style="min-width:28px;text-align:right">72%</span></div>
+            <div class="sat-bar-row">4점 <div class="sat-bar-bg"><div class="sat-bar-f" style="width:20%;background:#86efac"></div></div><span style="min-width:28px;text-align:right">20%</span></div>
+            <div class="sat-bar-row">3점 <div class="sat-bar-bg"><div class="sat-bar-f" style="width:6%;background:#fbbf24"></div></div><span style="min-width:28px;text-align:right">6%</span></div>
+            <div class="sat-bar-row">2점 <div class="sat-bar-bg"><div class="sat-bar-f" style="width:2%;background:#f87171"></div></div><span style="min-width:28px;text-align:right">2%</span></div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div style="font-size:10px;color:#475569;margin-bottom:5px">강사별 상위 만족도</div>
+        <table class="mini-table">
+          <tr><th>강사명</th><th>점수</th><th>운영횟수</th><th>구·군</th></tr>
+          <tr><td>김○○ 강사</td><td style="color:#4ade80;font-weight:700">4.92</td><td>42회</td><td>해운대구</td></tr>
+          <tr><td>이○○ 강사</td><td style="color:#4ade80;font-weight:700">4.88</td><td>38회</td><td>부산진구</td></tr>
+          <tr><td>박○○ 강사</td><td style="color:#4ade80;font-weight:700">4.85</td><td>35회</td><td>동래구</td></tr>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><span></span>우수사례 최근 등록</div>
+        <div class="case-list">
+          <div class="case-item gold"><div class="case-title">고령층 AI 키오스크 교육 성공 사례</div><div class="case-meta"><span class="case-tag gold">이달의 사례</span>해운대구 · 5월 15일</div></div>
+          <div class="case-item"><div class="case-title">소상공인 SNS 마케팅 실습 우수 운영</div><div class="case-meta"><span class="case-tag">강의형</span>부산진구 · 5월 12일</div></div>
+          <div class="case-item"><div class="case-title">에듀버스 농어촌 지역 디지털 접근 확대</div><div class="case-meta"><span class="case-tag">에듀버스</span>기장군 · 5월 9일</div></div>
+        </div>
+        <div style="margin-top:10px;text-align:center"><span style="font-size:10px;color:#3b82f6;cursor:pointer" onclick="showPage('cases')">+ 전체 우수사례 보기 (18건) →</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== PAGE: 교육 참여인원 ========== -->
+  <div class="page" id="page-participants">
+    <div>
+      <div class="back-btn" onclick="showPage('main')"><i class="ti ti-arrow-left" aria-hidden="true"></i> 메인 대시보드로 돌아가기</div>
+      <div class="detail-hd">
+        <div><div class="detail-title">👥 교육 참여인원 상세 현황</div><div class="detail-sub">2026년 누적 기준 · 최종 업데이트: 2026.05.29</div></div>
+        <span class="kpi-badge info" style="font-size:11px;padding:5px 10px">연간 목표 52.4% 달성</span>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-box"><div class="stat-lbl">누적 참여자</div><div class="stat-val">62,840<span style="font-size:12px;font-weight:400;color:#475569">명</span></div><div class="stat-note">연간 목표 120,000명</div></div>
+      <div class="stat-box"><div class="stat-lbl">이번달 참여자</div><div class="stat-val green">13,120<span style="font-size:12px;font-weight:400;color:#475569">명</span></div><div class="stat-note">전월 대비 ▲1,680명 증가</div></div>
+      <div class="stat-box"><div class="stat-lbl">금일 운영 회차</div><div class="stat-val amber">34<span style="font-size:12px;font-weight:400;color:#475569">회</span></div><div class="stat-note">강사 28명 운영 중</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title"><span></span>월별 참여자 추이</div>
+      <div class="bar-chart" style="height:120px">
+        <div style="position:absolute;left:0;top:0;font-size:9px;color:#334155">15,000</div>
+        <div style="position:absolute;left:0;bottom:18px;font-size:9px;color:#334155">0</div>
+        <div class="bar-wrap"><div class="bar" style="height:52%;background:#1e40af"></div><div class="bar-lbl">1월<br><span style="color:#60a5fa">7,800</span></div></div>
+        <div class="bar-wrap"><div class="bar" style="height:61%;background:#1e40af"></div><div class="bar-lbl">2월<br><span style="color:#60a5fa">9,200</span></div></div>
+        <div class="bar-wrap"><div class="bar" style="height:70%;background:#2563eb"></div><div class="bar-lbl">3월<br><span style="color:#60a5fa">10,500</span></div></div>
+        <div class="bar-wrap"><div class="bar" style="height:76%;background:#2563eb"></div><div class="bar-lbl">4월<br><span style="color:#60a5fa">11,440</span></div></div>
+        <div class="bar-wrap"><div class="bar" style="height:87%;background:#3b82f6;border:1px solid #60a5fa"></div><div class="bar-lbl" style="color:#60a5fa;font-weight:700">5월<br>13,120</div></div>
+        <div class="bar-wrap"><div class="bar" style="height:18%;background:#1e3a5f;border:1px dashed #334155"></div><div class="bar-lbl" style="color:#334155">6월</div></div>
+        <div class="bar-wrap"><div class="bar" style="height:18%;background:#1e3a5f;border:1px dashed #334155"></div><div class="bar-lbl" style="color:#334155">7월</div></div>
+        <div class="bar-wrap"><div class="bar" style="height:18%;background:#1e3a5f;border:1px dashed #334155"></div><div class="bar-lbl" style="color:#334155">8월</div></div>
+        <div class="bar-wrap"><div class="bar" style="height:18%;background:#1e3a5f;border:1px dashed #334155"></div><div class="bar-lbl" style="color:#334155">9월</div></div>
+        <div class="bar-wrap"><div class="bar" style="height:18%;background:#1e3a5f;border:1px dashed #334155"></div><div class="bar-lbl" style="color:#334155">10월</div></div>
+        <div class="bar-wrap"><div class="bar" style="height:18%;background:#1e3a5f;border:1px dashed #334155"></div><div class="bar-lbl" style="color:#334155">11월</div></div>
+        <div class="bar-wrap"><div class="bar" style="height:18%;background:#1e3a5f;border:1px dashed #334155"></div><div class="bar-lbl" style="color:#334155">12월</div></div>
+      </div>
+    </div>
+    <div class="row2b">
+      <div class="panel">
+        <div class="panel-title"><span></span>구·군별 참여자 현황 (전체 16개 구·군)</div>
+        <div class="dist-grid" style="grid-template-columns:repeat(4,1fr)">
+          <div class="dist-item"><div class="dist-name">해운대구</div><div class="dist-bar-bg"><div class="dist-bar-fill" style="width:95%;background:#22c55e"></div></div><div class="dist-count" style="color:#4ade80">4,560</div></div>
+          <div class="dist-item"><div class="dist-name">부산진구</div><div class="dist-bar-bg"><div class="dist-bar-fill" style="width:91%;background:#22c55e"></div></div><div class="dist-count" style="color:#4ade80">4,120</div></div>
+          <div class="dist-item"><div class="dist-name">동래구</div><div class="dist-bar-bg"><div class="dist-bar-fill" style="width:85%"></div></div><div class="dist-count">3,540</div></div>
+          <div class="dist-item"><div class="dist-name">남구</div><div class="dist-bar-bg"><div class="dist-bar-fill" style="width:79%"></div></div><div class="dist-count">3,180</div></div>
+          <div class="dist-item"><div class="dist-name">북구</div><div class="dist-bar-bg"><div class="dist-bar-fill" style="width:72%"></div></div><div class="dist-count">2,890</div></div>
+          <div class="dist-item"><div class="dist-name">중구</div><div class="dist-bar-bg"><div class="dist-bar-fill" style="width:82%"></div></div><div class="dist-count">2,840</div></div>
+          <div class="dist-item"><div class="dist-name">사하구</div><div class="dist-bar-bg"><div class="dist-bar-fill" style="width:66%"></div></div><div class="dist-count">2,640</div></div>
+          <div class="dist-item"><div class="dist-name">서구</div><div class="dist-bar-bg"><div class="dist-bar-fill" style="width:75%"></div></div><div class="dist-count">2,460</div></div>
+          <div class="dist-item"><div class="dist-name">금정구</div><div class="dist-bar-bg"><div class="dist-bar-fill" style="width:58%"></div></div><div class="dist-count">2,300</div></div>
+          <div class="dist-item"><div class="dist-name">동구</div><div class="dist-bar-bg"><div class="dist-bar-fill" style="width:68%"></div></div><div class="dist-count">2,200</div></div>
+          <div class="dist-item"><div class="dist-name">영도구</div><div class="dist-bar-bg"><div class="dist-bar-fill" style="width:60%"></div></div><div class="dist-count">1,920</div></div>
+          <div class="dist-item"><div class="dist-name">강서구</div><div class="dist-bar-bg"><div class="dist-bar-fill" style="width:42%;background:#f59e0b"></div></div><div class="dist-count" style="color:#fbbf24">1,640</div></div>
+          <div class="dist-item"><div class="dist-name">기장군</div><div class="dist-bar-bg"><div class="dist-bar-fill" style="width:38%"></div></div><div class="dist-count">1,420</div></div>
+          <div class="dist-item"><div class="dist-name">연제구</div><div class="dist-bar-bg"><div class="dist-bar-fill" style="width:35%"></div></div><div class="dist-count">1,380</div></div>
+          <div class="dist-item"><div class="dist-name">수영구</div><div class="dist-bar-bg"><div class="dist-bar-fill" style="width:31%"></div></div><div class="dist-count">1,260</div></div>
+          <div class="dist-item"><div class="dist-name">사상구</div><div class="dist-bar-bg"><div class="dist-bar-fill" style="width:28%;background:#f59e0b"></div></div><div class="dist-count" style="color:#fbbf24">840</div></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><span></span>참여자 특성 분포</div>
+        <div class="age-grid">
+          <div class="age-box"><div class="age-lbl">취약계층</div><div class="age-val" style="color:#c4b5fd">38.4%</div></div>
+          <div class="age-box"><div class="age-lbl">AI교육</div><div class="age-val">22.1%</div></div>
+          <div class="age-box"><div class="age-lbl">재참여율</div><div class="age-val" style="color:#4ade80">17.8%</div></div>
+          <div class="age-box"><div class="age-lbl">신규 참여</div><div class="age-val" style="color:#fbbf24">82.2%</div></div>
+        </div>
+        <div class="divider"></div>
+        <div class="panel-title" style="margin-top:4px"><span></span>교육 유형별 인원</div>
+        <div class="prog-list">
+          <div><div class="prog-hd"><span class="prog-name">강의형 교육</span><span class="prog-val">48% · 30,163명</span></div><div class="prog-bg"><div class="prog-fill" style="width:48%;background:#3b82f6"></div></div></div>
+          <div><div class="prog-hd"><span class="prog-name">부스형 교육</span><span class="prog-val">31% · 19,480명</span></div><div class="prog-bg"><div class="prog-fill" style="width:31%;background:#22c55e"></div></div></div>
+          <div><div class="prog-hd"><span class="prog-name">에듀버스</span><span class="prog-val">14% · 8,798명</span></div><div class="prog-bg"><div class="prog-fill" style="width:14%;background:#f59e0b"></div></div></div>
+          <div><div class="prog-hd"><span class="prog-name">AI 특화 교육</span><span class="prog-val">7% · 4,399명</span></div><div class="prog-bg"><div class="prog-fill" style="width:7%;background:#a78bfa"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== PAGE: 교육 이수율 ========== -->
+  <div class="page" id="page-completion">
+    <div>
+      <div class="back-btn" onclick="showPage('main')"><i class="ti ti-arrow-left" aria-hidden="true"></i> 메인 대시보드로 돌아가기</div>
+      <div class="detail-hd">
+        <div><div class="detail-title">📋 교육 이수율 상세 현황</div><div class="detail-sub">2026년 누적 기준 · 최종 업데이트: 2026.05.29</div></div>
+        <span class="kpi-badge up" style="font-size:11px;padding:5px 10px">▲ 전월 대비 +1.4%p 상승</span>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-box"><div class="stat-lbl">전체 이수율</div><div class="stat-val green">91.2<span style="font-size:12px;font-weight:400;color:#475569">%</span></div><div class="stat-note">57,310명 이수 완료</div></div>
+      <div class="stat-box"><div class="stat-lbl">미이수 인원</div><div class="stat-val amber">5,530<span style="font-size:12px;font-weight:400;color:#475569">명</span></div><div class="stat-note">전월 대비 ▼320명 감소</div></div>
+      <div class="stat-box"><div class="stat-lbl">평균 수강 시간</div><div class="stat-val">3.4<span style="font-size:12px;font-weight:400;color:#475569">시간</span></div><div class="stat-note">목표 3시간 초과 달성</div></div>
+    </div>
+    <div class="comp-grid">
+      <div class="comp-box"><div class="comp-type">📚 강의형</div><div class="comp-pct">94.1<span style="font-size:12px;font-weight:400">%</span></div><div class="comp-sub">28,393명 이수</div></div>
+      <div class="comp-box"><div class="comp-type">🏪 부스형</div><div class="comp-pct" style="color:#4ade80">96.8<span style="font-size:12px;font-weight:400">%</span></div><div class="comp-sub">18,856명 이수</div></div>
+      <div class="comp-box"><div class="comp-type">🚌 에듀버스</div><div class="comp-pct" style="color:#fbbf24">82.4<span style="font-size:12px;font-weight:400">%</span></div><div class="comp-sub">7,249명 이수</div></div>
+      <div class="comp-box"><div class="comp-type">🤖 AI특화</div><div class="comp-pct" style="color:#c4b5fd">88.2<span style="font-size:12px;font-weight:400">%</span></div><div class="comp-sub">3,881명 이수</div></div>
+    </div>
+    <div class="row2b">
+      <div class="panel">
+        <div class="panel-title"><span></span>월별 이수율 추이</div>
+        <div class="bar-chart" style="height:110px">
+          <div style="position:absolute;left:0;top:0;font-size:9px;color:#334155">100%</div>
+          <div style="position:absolute;left:0;bottom:18px;font-size:9px;color:#334155">80%</div>
+          <div class="bar-wrap"><div class="bar" style="height:40%;background:#166534"></div><div class="bar-lbl">1월<br><span style="color:#4ade80">87.3%</span></div></div>
+          <div class="bar-wrap"><div class="bar" style="height:53%;background:#15803d"></div><div class="bar-lbl">2월<br><span style="color:#4ade80">88.9%</span></div></div>
+          <div class="bar-wrap"><div class="bar" style="height:63%;background:#16a34a"></div><div class="bar-lbl">3월<br><span style="color:#4ade80">89.5%</span></div></div>
+          <div class="bar-wrap"><div class="bar" style="height:70%;background:#22c55e"></div><div class="bar-lbl">4월<br><span style="color:#4ade80">89.8%</span></div></div>
+          <div class="bar-wrap"><div class="bar" style="height:90%;background:#4ade80;border:1px solid #86efac"></div><div class="bar-lbl" style="color:#4ade80;font-weight:700">5월<br>91.2%</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:15%;background:#1e3a5f;border:1px dashed #334155"></div><div class="bar-lbl" style="color:#334155">6월</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:15%;background:#1e3a5f;border:1px dashed #334155"></div><div class="bar-lbl" style="color:#334155">7월</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:15%;background:#1e3a5f;border:1px dashed #334155"></div><div class="bar-lbl" style="color:#334155">8월</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:15%;background:#1e3a5f;border:1px dashed #334155"></div><div class="bar-lbl" style="color:#334155">9월</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:15%;background:#1e3a5f;border:1px dashed #334155"></div><div class="bar-lbl" style="color:#334155">10월</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:15%;background:#1e3a5f;border:1px dashed #334155"></div><div class="bar-lbl" style="color:#334155">11월</div></div>
+          <div class="bar-wrap"><div class="bar" style="height:15%;background:#1e3a5f;border:1px dashed #334155"></div><div class="bar-lbl" style="color:#334155">12월</div></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><span></span>구·군별 이수율 현황</div>
+        <div class="prog-list">
+          <div><div class="prog-hd"><span class="prog-name">해운대구</span><span class="prog-val" style="color:#4ade80">97.2%</span></div><div class="prog-bg"><div class="prog-fill" style="width:97%;background:#22c55e"></div></div></div>
+          <div><div class="prog-hd"><span class="prog-name">동래구</span><span class="prog-val" style="color:#4ade80">95.4%</span></div><div class="prog-bg"><div class="prog-fill" style="width:95%;background:#22c55e"></div></div></div>
+          <div><div class="prog-hd"><span class="prog-name">부산진구</span><span class="prog-val">93.1%</span></div><div class="prog-bg"><div class="prog-fill" style="width:93%"></div></div></div>
+          <div><div class="prog-hd"><span class="prog-name">남구</span><span class="prog-val">91.8%</span></div><div class="prog-bg"><div class="prog-fill" style="width:92%"></div></div></div>
+          <div><div class="prog-hd"><span class="prog-name">북구</span><span class="prog-val">90.5%</span></div><div class="prog-bg"><div class="prog-fill" style="width:91%"></div></div></div>
+          <div><div class="prog-hd"><span class="prog-name">강서구</span><span class="prog-val" style="color:#fbbf24">78.4%</span></div><div class="prog-bg"><div class="prog-fill" style="width:78%;background:#f59e0b"></div></div></div>
+          <div><div class="prog-hd"><span class="prog-name">기장군</span><span class="prog-val" style="color:#fbbf24">75.2%</span></div><div class="prog-bg"><div class="prog-fill" style="width:75%;background:#f59e0b"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== PAGE: 교육 만족도 ========== -->
+  <div class="page" id="page-satisfaction">
+    <div>
+      <div class="back-btn" onclick="showPage('main')"><i class="ti ti-arrow-left" aria-hidden="true"></i> 메인 대시보드로 돌아가기</div>
+      <div class="detail-hd">
+        <div><div class="detail-title">📊 교육 만족도 상세 현황</div><div class="detail-sub">2026년 누적 기준 · 응답 건수 41,230건</div></div>
+        <span class="kpi-badge warn" style="font-size:11px;padding:5px 10px">전월 대비 +0.1점 향상</span>
+      </div>
+    </div>
+    <div class="row2b">
+      <div class="panel" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px">
+        <div style="font-size:52px;font-weight:700;color:#4ade80;line-height:1">4.6</div>
+        <div style="font-size:12px;color:#475569;margin-top:4px">/ 5.0점 만점</div>
+        <div style="display:flex;gap:4px;margin-top:10px;font-size:18px">
+          <span style="color:#fbbf24">★</span><span style="color:#fbbf24">★</span><span style="color:#fbbf24">★</span><span style="color:#fbbf24">★</span><span style="color:#334155">★</span>
+        </div>
+        <div style="width:100%;margin-top:16px">
+          <div class="sat-bar-row" style="font-size:11px;margin-bottom:6px">5점<div class="sat-bar-bg" style="height:7px"><div class="sat-bar-f" style="width:72%;height:7px"></div></div><span style="min-width:34px;text-align:right">72%</span></div>
+          <div class="sat-bar-row" style="font-size:11px;margin-bottom:6px">4점<div class="sat-bar-bg" style="height:7px"><div class="sat-bar-f" style="width:20%;background:#86efac;height:7px"></div></div><span style="min-width:34px;text-align:right">20%</span></div>
+          <div class="sat-bar-row" style="font-size:11px;margin-bottom:6px">3점<div class="sat-bar-bg" style="height:7px"><div class="sat-bar-f" style="width:6%;background:#fbbf24;height:7px"></div></div><span style="min-width:34px;text-align:right">6%</span></div>
+          <div class="sat-bar-row" style="font-size:11px">2점<div class="sat-bar-bg" style="height:7px"><div class="sat-bar-f" style="width:2%;background:#f87171;height:7px"></div></div><span style="min-width:34px;text-align:right">2%</span></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><span></span>항목별 만족도 (5점 만점)</div>
+        <div class="radar-wrap">
+          <div class="radar-item"><span class="radar-lbl">강사 전문성</span><div class="radar-bg"><div class="radar-fill" style="width:96%;background:#4ade80"></div></div><span class="radar-score" style="color:#4ade80">4.82</span></div>
+          <div class="radar-item"><span class="radar-lbl">교육 내용</span><div class="radar-bg"><div class="radar-fill" style="width:94%;background:#4ade80"></div></div><span class="radar-score" style="color:#4ade80">4.71</span></div>
+          <div class="radar-item"><span class="radar-lbl">교육 시설</span><div class="radar-bg"><div class="radar-fill" style="width:92%;background:#3b82f6"></div></div><span class="radar-score">4.58</span></div>
+          <div class="radar-item"><span class="radar-lbl">교재·자료</span><div class="radar-bg"><div class="radar-fill" style="width:90%;background:#3b82f6"></div></div><span class="radar-score">4.52</span></div>
+          <div class="radar-item"><span class="radar-lbl">운영 편의성</span><div class="radar-bg"><div class="radar-fill" style="width:88%;background:#3b82f6"></div></div><span class="radar-score">4.42</span></div>
+          <div class="radar-item"><span class="radar-lbl">재수강 의향</span><div class="radar-bg"><div class="radar-fill" style="width:86%;background:#f59e0b"></div></div><span class="radar-score" style="color:#fbbf24">4.31</span></div>
+        </div>
+        <div class="divider"></div>
+        <div class="panel-title"><span></span>교육 유형별 만족도</div>
+        <div class="prog-list">
+          <div><div class="prog-hd"><span class="prog-name">부스형</span><span class="prog-val" style="color:#4ade80">4.71점</span></div><div class="prog-bg"><div class="prog-fill" style="width:94%;background:#22c55e"></div></div></div>
+          <div><div class="prog-hd"><span class="prog-name">AI특화</span><span class="prog-val" style="color:#4ade80">4.68점</span></div><div class="prog-bg"><div class="prog-fill" style="width:94%;background:#22c55e"></div></div></div>
+          <div><div class="prog-hd"><span class="prog-name">강의형</span><span class="prog-val">4.58점</span></div><div class="prog-bg"><div class="prog-fill" style="width:92%"></div></div></div>
+          <div><div class="prog-hd"><span class="prog-name">에듀버스</span><span class="prog-val" style="color:#fbbf24">4.41점</span></div><div class="prog-bg"><div class="prog-fill" style="width:88%;background:#f59e0b"></div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title"><span></span>강사별 만족도 상위 현황</div>
+      <table class="instr-table">
+        <tr><th>순위</th><th>강사명</th><th>만족도</th><th>운영 횟수</th><th>주요 활동 구·군</th><th>교육 유형</th></tr>
+        <tr><td style="color:#fbbf24;font-weight:700">1위</td><td>김○○ 강사</td><td style="color:#4ade80;font-weight:700">4.92점</td><td>42회</td><td>해운대구</td><td>강의형</td></tr>
+        <tr><td style="color:#fbbf24;font-weight:700">2위</td><td>이○○ 강사</td><td style="color:#4ade80;font-weight:700">4.88점</td><td>38회</td><td>부산진구</td><td>AI특화</td></tr>
+        <tr><td style="color:#fbbf24;font-weight:700">3위</td><td>박○○ 강사</td><td style="color:#4ade80;font-weight:700">4.85점</td><td>35회</td><td>동래구</td><td>강의형</td></tr>
+        <tr><td>4위</td><td>최○○ 강사</td><td>4.79점</td><td>31회</td><td>남구</td><td>부스형</td></tr>
+        <tr><td>5위</td><td>정○○ 강사</td><td>4.74점</td><td>28회</td><td>수영구</td><td>에듀버스</td></tr>
+      </table>
+    </div>
+    <div class="panel">
+      <div class="panel-title"><span></span>주요 개선 의견 키워드</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px">
+        <span class="tag hi">실습 시간 확대</span>
+        <span class="tag hi">교재 보완</span>
+        <span class="tag">심화 과정 개설</span>
+        <span class="tag">주차 환경 개선</span>
+        <span class="tag">온라인 병행 운영</span>
+        <span class="tag">소규모 그룹 진행</span>
+        <span class="tag hi">AI 도구 실습</span>
+        <span class="tag">수강 시간 유연화</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== PAGE: 우수사례 ========== -->
+  <div class="page" id="page-cases">
+    <div>
+      <div class="back-btn" onclick="showPage('main')"><i class="ti ti-arrow-left" aria-hidden="true"></i> 메인 대시보드로 돌아가기</div>
+      <div class="detail-hd">
+        <div><div class="detail-title">⭐ 우수사례 발굴 현황</div><div class="detail-sub">2026년 누적 18건 · 이번달 5건 신규 등록</div></div>
+        <span class="kpi-badge info" style="font-size:11px;padding:5px 10px">월간 목표 167% 초과 달성</span>
+      </div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-box"><div class="stat-lbl">누적 발굴 건수</div><div class="stat-val purple">18<span style="font-size:12px;font-weight:400;color:#475569">건</span></div><div class="stat-note">월간 목표: 3건</div></div>
+      <div class="stat-box"><div class="stat-lbl">이번달 신규</div><div class="stat-val amber">5<span style="font-size:12px;font-weight:400;color:#475569">건</span></div><div class="stat-note">목표 대비 167% 달성</div></div>
+      <div class="stat-box"><div class="stat-lbl">월간보고서 제출</div><div class="stat-val green">3<span style="font-size:12px;font-weight:400;color:#475569">건</span></div><div class="stat-note">1~3월 보고서 완료</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title"><span></span>이달의 우수사례 — 2026년 5월 (5건)</div>
+      <div class="full-case-item gold">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+          <div class="full-case-title">고령층 AI 키오스크 교육 성공 사례</div>
+          <span class="full-tag gold">이달의 사례</span>
+        </div>
+        <div class="full-case-body">해운대구 복지관에서 75세 이상 고령층 30명을 대상으로 무인 주문 키오스크 활용 교육 실시. 참여자 전원이 교육 후 독립적으로 키오스크 이용 성공. 지역 언론 취재 및 우수사례로 선정됨.</div>
+        <div><span class="full-tag gold">취약계층</span><span class="full-tag">강의형</span><span style="font-size:10px;color:#475569">해운대구 · 2026.05.15 · 강사: 김○○</span></div>
+      </div>
+      <div class="full-case-item">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+          <div class="full-case-title">소상공인 SNS 마케팅 실습 우수 운영</div>
+          <span class="full-tag">강의형</span>
+        </div>
+        <div class="full-case-body">부산진구 소상공인 25명 대상 SNS 마케팅 실습 교육 진행. 교육 후 참여자 60%가 자체 SNS 채널을 개설, 3주 이내 첫 게시물 발행하는 성과 달성. 지속 모니터링 통해 성과 추적 중.</div>
+        <div><span class="full-tag">소상공인</span><span style="font-size:10px;color:#475569">부산진구 · 2026.05.12</span></div>
+      </div>
+      <div class="full-case-item purple">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+          <div class="full-case-title">에듀버스 농어촌 지역 디지털 접근 확대</div>
+          <span class="full-tag purple">에듀버스</span>
+        </div>
+        <div class="full-case-body">기장군 농어촌 지역 이동식 교육 버스 운영으로 디지털 소외지역 주민 45명 참여. 교통 취약 지역의 교육 접근성 확보 우수 사례로 주목받음.</div>
+        <div><span class="full-tag purple">취약계층</span><span class="full-tag purple">농어촌</span><span style="font-size:10px;color:#475569">기장군 · 2026.05.09</span></div>
+      </div>
+      <div class="full-case-item">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+          <div class="full-case-title">장애인 맞춤형 AI 보조도구 활용 교육</div>
+          <span class="full-tag">부스형</span>
+        </div>
+        <div class="full-case-body">남구 장애인복지관에서 시각·청각 장애인 15명 대상 AI 보조 앱 활용 교육. 음성 인식, 화면 낭독 등 맞춤형 커리큘럼 개발 적용.</div>
+        <div><span class="full-tag">취약계층</span><span class="full-tag">장애인</span><span style="font-size:10px;color:#475569">남구 · 2026.05.07</span></div>
+      </div>
+      <div class="full-case-item" style="border-color:#22c55e">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+          <div class="full-case-title">청년 AI 창업 아이디어 워크숍</div>
+          <span class="full-tag" style="background:rgba(34,197,94,.2);color:#4ade80">AI특화</span>
+        </div>
+        <div class="full-case-body">동래구 청년 창업자 20명 대상 AI 도구 활용 창업 아이디어 개발 워크숍 진행. 참여자 3팀이 실제 사업 아이디어를 도출하고 창업 지원 프로그램 연계.</div>
+        <div><span class="full-tag" style="background:rgba(34,197,94,.2);color:#4ade80">청년</span><span class="full-tag" style="background:rgba(34,197,94,.2);color:#4ade80">AI특화</span><span style="font-size:10px;color:#475569">동래구 · 2026.05.04</span></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title"><span></span>월별 우수사례 발굴 건수</div>
+      <div style="display:flex;align-items:flex-end;gap:10px;height:80px;padding-bottom:18px;position:relative">
+        <div style="position:absolute;left:0;top:0;font-size:9px;color:#334155">5건</div>
+        <div style="position:absolute;left:0;bottom:18px;font-size:9px;color:#334155">0건</div>
+        <div class="bar-wrap"><div class="bar" style="height:40%;background:#6d28d9"></div><div class="bar-lbl">1월<br><span style="color:#c4b5fd">2건</span></div></div>
+        <div class="bar-wrap"><div class="bar" style="height:40%;background:#6d28d9"></div><div class="bar-lbl">2월<br><span style="color:#c4b5fd">2건</span></div></div>
+        <div class="bar-wrap"><div class="bar" style="height:60%;background:#7c3aed"></div><div class="bar-lbl">3월<br><span style="color:#c4b5fd">3건</span></div></div>
+        <div class="bar-wrap"><div class="bar" style="height:60%;background:#7c3aed"></div><div class="bar-lbl">4월<br><span style="color:#c4b5fd">3건</span></div></div>
+        <div class="bar-wrap"><div class="bar" style="height:100%;background:#a78bfa;border:1px solid #c4b5fd"></div><div class="bar-lbl" style="color:#c4b5fd;font-weight:700">5월<br>5건</div></div>
+        <div class="bar-wrap"><div class="bar" style="height:15%;background:#1e3a5f;border:1px dashed #334155"></div><div class="bar-lbl" style="color:#334155">6월</div></div>
+        <div class="bar-wrap"><div class="bar" style="height:15%;background:#1e3a5f;border:1px dashed #334155"></div><div class="bar-lbl" style="color:#334155">7월</div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showPage(key){
+  var pages={main:'page-main',participants:'page-participants',completion:'page-completion',satisfaction:'page-satisfaction',cases:'page-cases'};
+  var tabs={main:'tab-main',participants:'tab-participants',completion:'tab-completion',satisfaction:'tab-satisfaction',cases:'tab-cases'};
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  var pg=document.getElementById(pages[key]);
+  if(pg){pg.classList.add('active');}
+  var tb=document.getElementById(tabs[key]);
+  if(tb){tb.classList.add('active');}
+}
+</script>
